@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
+import { Route } from 'react-router-dom'
 import './App.css'
+import Nav from './Nav'
 import News from '../News/News'
 import SideNews from '../News/SideNews'
+import Book from '../BookShelf/Book'
 
 class App extends Component {
   constructor(props) {
@@ -18,29 +21,35 @@ class App extends Component {
       news3: {
         type: 'everything',
         query: 'domains=comicbookmovie.com&language=en'
-      }
+      },
+      books: [ {id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8}, ]
     }
   }
 
   render() {
     return (
       <div className="App container-fluid">
-        <div className="navbar-fixed">
-          <nav>
-            <div className="nav-wrapper indigo lighten-4">
-              <a href="/" className="bran-logo center">My Feed</a>
+        <Nav />
+        <Route exact path='/' render={() => (
+          <div className="row">
+            <div className="col s8">
+              <News news={this.state.news1} />
+              <News news={this.state.news2} />
             </div>
-          </nav>
-        </div>
-        <div className="row">
-          <div className="col s8">
-            <News news={this.state.news1} />
-            <News news={this.state.news2} />
+            <div className="col s4">
+              <SideNews news={this.state.news3} />
+            </div>
           </div>
-          <div className="col s4">
-            <SideNews news={this.state.news3} />
+        )}/>
+        <Route path="/books" render={() => (
+          <div className="Grid">
+            {
+              this.state.books.map((book) => (
+                <Book duration={150} key={book.id} />
+              ))
+            }
           </div>
-        </div>
+        )}/>
       </div>
     )
   }

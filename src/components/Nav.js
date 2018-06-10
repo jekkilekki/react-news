@@ -24,8 +24,10 @@ class Nav extends Component {
           <div className="brand-logo">
             <a href="/" className="bran-logo">
               <img src="https://cdn.pixabay.com/photo/2016/01/23/16/02/book-1157658_960_720.png" 
-                  className={this.state.toggleLogo ? 'static-logo' : 'animated-logo'}
-                  onClick={this.toggleLogo} /> My React sites</a>
+                  className={!this.state.toggleLogo ? 'static-logo' : 'static-logo animated jello'}
+                  onMouseEnter={this.toggleLogo} 
+                  onMouseLeave={this.toggleLogo}
+              /> My React sites</a>
           </div>
           <ul>
             <li><Link to="/">Home</Link></li>

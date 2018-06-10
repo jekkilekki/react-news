@@ -6,6 +6,7 @@ class BookList extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            loading: true,
             books: []
         }
     }
@@ -16,18 +17,18 @@ class BookList extends Component {
         })
         console.log(this.state.books)
 
-        // const url = 'https://reactnd-books-api.udacity.com/books'
+        const url = 'https://reactnd-books-api.udacity.com/books'
 
-        // fetch(url, { headers: { 'Authorization': 'AaronKr' }})
+        fetch(url, { headers: { 'Authorization': 'AaronKr' }})
         //     .then((response) => {
         //         return response.json()
         //     })
-        //     .then((data) => {
-        //         this.setState({
-        //             books: data.books
-        //         })
-        //     })
-        //     .catch((error) => console.log(error))
+            .then((data) => {
+                this.setState({
+                    books: data.books
+                })
+            })
+            .catch((error) => console.log(error))
     }
 
     renderBooks() {

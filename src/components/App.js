@@ -5,11 +5,13 @@ import Nav from './Nav'
 import News from '../News/News'
 import SideNews from '../News/SideNews'
 import Book from '../BookShelf/Book'
+import Loading from './Loading'
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      loading: true,
       news1: {
         type: 'top-headlines',
         query: 'sources=bbc-news'
@@ -22,8 +24,56 @@ class App extends Component {
         type: 'everything',
         query: 'domains=comicbookmovie.com&language=en'
       },
-      books: [ {id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8}, ]
+      books: [ 
+        {
+          id:0,
+          animation: 'book card'
+        },
+        {
+          id:1,
+          animation: 'book card'
+        },
+        {
+          id:2,
+          animation: 'book card'
+        },
+        {
+          id:3,
+          animation: 'book card'
+        },
+        {
+          id:4,
+          animation: 'book card'
+        },
+        {
+          id:5,
+          animation: 'book card'
+        },
+        {
+          id:6,
+          animation: 'book card'
+        },
+        {
+          id:7,
+          animation: 'book card'
+        }, 
+      ]
     }
+    this.clickCard = this.clickCard.bind(this)
+  }
+
+  componentDidMount() {
+    setTimeout(() => this.setState({ loading: false }), 3000)
+  }
+
+  clickCard(card) {
+    let cards = this.state.books
+    cards[card.id].animation = 'book card animated zoomOut'
+    console.log(cards)
+
+    this.setState({
+      cards,
+    })
   }
 
   render() {
@@ -44,8 +94,9 @@ class App extends Component {
         <Route path="/books" render={() => (
           <div className="Grid">
             {
+              this.state.loading ? <Loading /> : 
               this.state.books.map((book) => (
-                <Book duration={150} key={book.id} />
+                <Book duration={150} key={book.id} card={book} clickCard={this.clickCard} />
               ))
             }
           </div>

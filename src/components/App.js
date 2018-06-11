@@ -1,12 +1,25 @@
 import React, { Component } from 'react'
-import { Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import * as BooksAPI from '../BookShelf/BooksAPI'
 import './App.css'
 import Nav from './Nav'
+import Home from './Home'
 import News from '../News/News'
 import SideNews from '../News/SideNews'
 import Book from '../BookShelf/Book'
+import BookDetails from '../BookShelf/BookDetails'
 import BookList from '../BookShelf/BookList'
+import Vitamin from './Vitamin'
+import Whoops404 from './Whoops404'
 import Loading from './Loading'
+
+/*
+  https://reacttraining.com/react-router/web/example/auth-workflow
+  - {history} - Keep track of where you've been (back button)
+  - {location} - Where you are NOW - multiple keys, etc
+  - {match} - Match specific things within a component (recursive example)
+  - auth-workflow = Login/logout redirects
+*/
 
 class App extends Component {
   constructor(props) {
@@ -25,7 +38,8 @@ class App extends Component {
         type: 'everything',
         query: 'domains=comicbookmovie.com&language=en'
       },
-      books: [ 
+      books: [],
+      cards: [ 
         {
           id:0,
           animation: 'book card'
@@ -66,12 +80,36 @@ class App extends Component {
     this.closeNav = this.closeNav.bind(this)
   }
 
+  getData() {
+    BooksAPI.getAll().then((response) => {
+        console.log("First response:", response)
+        this.setState({
+          books: response,
+          loading: false
+        })
+
+        this.state.books.map((book) => {
+          this.setState({
+            booksAnimations: { id: book.id, animation: 'card' }
+          })
+        })
+      })
+      .then(() => {
+        console.log("Book state:", this.state.books)
+        console.log("Book animations", this.state.bookAnimations)
+      })
+      .catch((error) => console.log(error))
+  }
+
   componentDidMount() {
-    setTimeout(() => this.setState({ loading: false }), 3000)
+    this.getData()
+    setTimeout(() => {
+      this.setState({ loading: false })
+      }, 3000)
   }
 
   showBack(card) {
-    let cards = this.state.books
+    let cards = this.state.cards
     cards[card.id].animation = 'book card card-flip'
     console.log(cards)
 
@@ -81,7 +119,7 @@ class App extends Component {
   }
 
   showFront(card) {
-    let cards = this.state.books
+    let cards = this.state.cards
     cards[card.id].animation = 'book card'
     console.log(cards)
 
@@ -100,17 +138,30 @@ class App extends Component {
 
   render() {
     return (
+      <Router>
       <div className="App container-fluid">
         
         <Nav closeNav={this.closeNav} />
 
-        <Route exact path="/" render={() => (
+        <Switch>
+        <Route exact path="/" component={Home}/>
+
+        <Route exact path="/books" render={(props) => (
           <div className="Grid">
-            <BookList />
+            <BookList books={this.state.books} />
           </div>
         )}/>
 
-        <Route path="/news" render={() => (
+        <Route exact path="/book/:id" render={(props) => {
+          let bookId = props.location.pathname.replace('/book/', '');
+          console.log("Book Id", bookId)
+          console.log("All books", this.state.books)
+          return (
+            <BookDetails book={this.state.books[bookId]} />
+          )
+        }}/>
+
+        <Route exact path="/news" render={() => (
           <div className="row">
             <div className="col s8">
               <News news={this.state.news1} />
@@ -122,11 +173,11 @@ class App extends Component {
           </div>
         )}/>
 
-        <Route path="/books" render={() => (
+        <Route exact path="/cards" render={(props) => (
           <div className="Grid">
             {
-              this.state.loading ? <Loading /> : 
-              this.state.books.map((book) => (
+              props.loading ? <Loading /> : 
+              props.cards.map((book) => (
                 <Book 
                   duration={150} 
                   key={book.id} 
@@ -139,7 +190,14 @@ class App extends Component {
           </div>
         )}/>
 
+        <Route exact path="/vitamin" component={Vitamin} />
+
+        <Route component={Whoops404}/>
+
+        </Switch>
+
       </div>
+      </Router>
     )
   }
 }

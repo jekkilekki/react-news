@@ -37,6 +37,7 @@ class Nav extends Component {
             <li><Link to="/">Home</Link></li>
             <li><Link to="/news">News</Link></li>
             <li><Link to="/books">Books</Link></li>
+            <li><Link to="/vitamin">Vitamin</Link></li>
             <li><a href="" onClick={() => this.props.openNav()}>Menu</a></li>
           </ul>
         </nav>
@@ -44,9 +45,9 @@ class Nav extends Component {
         <div id="overlayNav" className="overlay">
           <a className="closebtn" onClick={() => this.props.closeNav()}>&times;</a>
           <div className="overlay-content">
-            <Link to="/">Home</Link>
-            <Link to="/news">News</Link>
-            <Link to="/books">Books</Link>
+            <Link to="/" onClick={() => this.props.closeNav()}>Home</Link>
+            <Link to="/news" onClick={() => this.props.closeNav()}>News</Link>
+            <Link to="/books" onClick={() => this.props.closeNav()}>Books</Link>
           </div>
         </div>
       </div>

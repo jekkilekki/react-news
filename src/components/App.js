@@ -5,6 +5,7 @@ import Nav from './Nav'
 import News from '../News/News'
 import SideNews from '../News/SideNews'
 import Book from '../BookShelf/Book'
+import BookList from '../BookShelf/BookList'
 import Loading from './Loading'
 
 class App extends Component {
@@ -79,8 +80,16 @@ class App extends Component {
   render() {
     return (
       <div className="App container-fluid">
+
         <Nav />
-        <Route exact path='/' render={() => (
+
+        <Route exact path="/" render={() => (
+          <div className="Grid">
+            <BookList />
+          </div>
+        )}/>
+
+        <Route path="/news" render={() => (
           <div className="row">
             <div className="col s8">
               <News news={this.state.news1} />
@@ -91,6 +100,7 @@ class App extends Component {
             </div>
           </div>
         )}/>
+
         <Route path="/books" render={() => (
           <div className="Grid">
             {
@@ -101,6 +111,7 @@ class App extends Component {
             }
           </div>
         )}/>
+
       </div>
     )
   }

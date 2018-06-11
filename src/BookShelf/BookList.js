@@ -1,49 +1,49 @@
 import React, { Component } from 'react'
 import Book from './Book'
-import * as BooksAPI from '../BooksAPI'
+import Loading from '../components/Loading'
+import * as BooksAPI from './BooksAPI'
 
 class BookList extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            loading: true,
-            books: []
-        }
+  constructor(props) {
+    super(props)
+    this.state = {
+      loading: true,
+      books: []
     }
+  }
 
-    componentDidMount() {
+  componentDidMount() {
+    BooksAPI.getAll().then((response) => {
+        console.log("First response:", response)
         this.setState({
-            books: BooksAPI.getAll()
+          books: response,
+          loading: false
         })
-        console.log(this.state.books)
+      })
+      .then(() => {
+        console.log("Book state:", this.state.books)
+      })
+      .catch((error) => console.log(error))
+  }
 
-        const url = 'https://reactnd-books-api.udacity.com/books'
+  renderBooks() {
+    return this.state.books.map((book) => (
+      <Book key={book.id} item={book} />
+    ))
+  }
 
-        fetch(url, { headers: { 'Authorization': 'AaronKr' }})
-        //     .then((response) => {
-        //         return response.json()
-        //     })
-            .then((data) => {
-                this.setState({
-                    books: data.books
-                })
-            })
-            .catch((error) => console.log(error))
-    }
-
-    renderBooks() {
-        return this.state.books.map((book) => (
-            <Book key={book.id} item={book} />
-        ))
-    }
-
-    render() {
-        return (
-            <ul>
-                {/* {this.renderBooks()} */}
-            </ul>
-        )
-    }
+  render() {
+    return (
+      <div className="Grid">
+        {
+          this.state.loading ? <Loading /> :
+          this.state.books.map((book) => (
+            <Book duration={150} key={book.id} card={book} />
+          ))
+        }
+      </div>
+    )
+  }
 }
 
 export default BookList

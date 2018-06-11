@@ -6,10 +6,10 @@ const Book = (props) => (
     className={props.card.animation}
     onClick={() => props.clickCard(props.card)}
     >
-    <img className="book-image" src="https://www.neondystopia.com/wp-content/uploads/2017/07/the-punch-escrow-683x1024.jpeg" alt="A book I read once" />
+    <img className="book-image" src={props.card.imageLinks.thumbnail} alt="A book I read once" />
     <div className="container">
-      <h3>The Punch Escrow <span className="price">$24.99</span></h3>
-      <p>A book about a man who accidentally gets copied while teleporting to another location on earth, and the consequences of that event.</p>
+      <h3>{props.card.title} <span className="price">$24.99</span></h3>
+      <p>{props.card.description}</p>
     </div>
   </div>
 )

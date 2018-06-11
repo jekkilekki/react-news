@@ -60,16 +60,19 @@ class App extends Component {
         }, 
       ]
     }
-    this.clickCard = this.clickCard.bind(this)
+    this.showBack = this.showBack.bind(this)
+    this.showFront = this.showFront.bind(this)
+    this.openNav = this.openNav.bind(this)
+    this.closeNav = this.closeNav.bind(this)
   }
 
   componentDidMount() {
     setTimeout(() => this.setState({ loading: false }), 3000)
   }
 
-  clickCard(card) {
+  showBack(card) {
     let cards = this.state.books
-    cards[card.id].animation = 'book card animated zoomOut'
+    cards[card.id].animation = 'book card card-flip'
     console.log(cards)
 
     this.setState({
@@ -77,11 +80,29 @@ class App extends Component {
     })
   }
 
+  showFront(card) {
+    let cards = this.state.books
+    cards[card.id].animation = 'book card'
+    console.log(cards)
+
+    this.setState({
+      cards,
+    })
+  }
+
+  openNav() {
+    document.getElementById("overlayNav").style.width = "100%"
+  }
+
+  closeNav() {
+    document.getElementById("overlayNav").style.width = "0%"
+  }
+
   render() {
     return (
       <div className="App container-fluid">
-
-        <Nav />
+        
+        <Nav closeNav={this.closeNav} />
 
         <Route exact path="/" render={() => (
           <div className="Grid">
@@ -106,7 +127,13 @@ class App extends Component {
             {
               this.state.loading ? <Loading /> : 
               this.state.books.map((book) => (
-                <Book duration={150} key={book.id} card={book} clickCard={this.clickCard} />
+                <Book 
+                  duration={150} 
+                  key={book.id} 
+                  card={book} 
+                  showBack={this.showBack} 
+                  showFront={this.showFront} 
+                />
               ))
             }
           </div>
